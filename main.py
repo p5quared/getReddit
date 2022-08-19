@@ -32,8 +32,12 @@ submissions
 #  get title & top 3 comment chains (max 3 levels deep),
 #  from top post on subreddit
 saved_comments = list()
-submissions = reddit.subreddit('askreddit').hot(limit=1)
+submissions = reddit.subreddit('askmen').hot(limit=1)
 with open("subtext.txt", "w") as f:
+    # TODO: cleanup usage of f.write()... append all to [[],[]] and use .writelines()
+
+    # TODO: remove print statements/differentiate whether to print output or write output
+    #       (eventually prints will almost certainly be eliminated)
     for n, submission in enumerate(submissions):
         submission.comments.replace_more(limit=0)
         print(n+1, submission.title)
@@ -41,11 +45,12 @@ with open("subtext.txt", "w") as f:
         f.write(submission.title + "\n")
         f.write("COMMENTS\n")
         comment_forest = submission.comments
-        for comment in comment_forest[:5]:
+        for surface_comment in comment_forest[:5]:  # get top 5 comments
             print("*"*8)
-            print(comment.body)
-            f.write(">"+comment.body+"\n")
-            for reply in comment.replies[:2]:
-                print(reply.body)
-                f.write("\t>"+reply.body+"\n")
+            print(surface_comment.body)
+            f.write(">" + surface_comment.body + "\n")
+            for reply in surface_comment.replies:  # get 2 replies if their scores meet criteria
+                if reply.score >= (surface_comment.score / 2):
+                    print(reply.body)
+                    f.write("\t>"+reply.body+"\n")
 f.close()
