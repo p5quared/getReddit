@@ -1,16 +1,51 @@
-# This is a sample Python script.
+import os
+import praw
+from dotenv import load_dotenv
+from pprint import pprint
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
+USER_ID = os.getenv('USER_ID')
+USER_PASSWORD = os.getenv('USER_PASSWORD')
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+reddit = praw.Reddit(
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    user_agent=f'python: PMAW request enrichment (by u/pto2)'
+)
+print(f'Reddit instance established?\n{reddit.read_only}\n')
+'''
+<< notes on PRAW >> 
+reddit.subreddit("abc")
+submissions
+    .title
+    .body
+    .score
+    .comments[n]
+     [n].body
+        .replies[n]
+         [n].body
+.replace_more(limit=0) >> eliminates "more comments"
+'''
+#  get title & top 3 comment chains (max 3 levels deep),
+#  from top post on subreddit
+saved_comments = list()
+submissions = reddit.subreddit('askreddit').hot(limit=1)
+with open("subtext.txt", "w") as f:
+    for n, submission in enumerate(submissions):
+        submission.comments.replace_more(limit=0)
+        print(n+1, submission.title)
+        f.write("TITLE\n")
+        f.write(submission.title + "\n")
+        f.write("COMMENTS\n")
+        comment_forest = submission.comments
+        for comment in comment_forest[:5]:
+            print("*"*8)
+            print(comment.body)
+            f.write(">"+comment.body+"\n")
+            for reply in comment.replies[:2]:
+                print(reply.body)
+                f.write("\t>"+reply.body+"\n")
+f.close()
