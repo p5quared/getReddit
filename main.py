@@ -32,12 +32,14 @@ submissions
 #  get title & top 3 comment chains (max 3 levels deep),
 #  from top post on subreddit
 saved_comments = list()
-submissions = reddit.subreddit('askmen').hot(limit=1)
+submissions = reddit.subreddit('askreddit').hot(limit=1)
 with open("subtext.txt", "w") as f:
     # TODO: cleanup usage of f.write()... append all to [[],[]] and use .writelines()
 
     # TODO: remove print statements/differentiate whether to print output or write output
     #       (eventually prints will almost certainly be eliminated)
+
+    # Works for text based reply subs (r/askreddit, r/askmen, etc...)
     for n, submission in enumerate(submissions):
         submission.comments.replace_more(limit=0)
         print(n+1, submission.title)
