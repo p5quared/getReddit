@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
+# TODO: Output to DIR
 def drawPost(post_object):
     body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
     body_string = "\n".join(body_wrapped)
