@@ -31,15 +31,19 @@ def drawPost(post_object):
     d.text((25, 50), poster, font=font, fill=(256, 256, 256))  # draw username
     d.multiline_text((body_x, 120), body_string, font=font, fill=(256, 256, 256))  # draw comment
 
-    out.show()
+    if __name__ == '__main__':
+        out.save("./test_resources/" + post_object.username + ".jpeg")
 
 
 #  Optimizing for mobile/tiktok size (1080x1920)
 if __name__ == '__main__':
+    from random import randint
+
+
     class SampleObject:
         def __init__(self, body: str, is_submission=False, is_reply=False):
             self.body = body
-            self.username = "UnoriginalUse"
+            self.username = "someUser" + str(randint(0, 10000))
             self.isSubmission = is_submission
             self.isReply = is_reply
             self.score = 2_200
@@ -47,12 +51,12 @@ if __name__ == '__main__':
 
     fake_comment = SampleObject(
         "It's a small migratory bird, a delicacy in French cuisine. They're caught with nets, locked in a cage so they gorge themselves on grain until they're fat, then they're drowned in cognac to marinate the meat, and cooked and eaten whole. The traditional way of eating them is while covering your head with a towel so God doesn't see the indulgent and depraved thing you're doing, so that says something.")
-    fake_reply = SampleObject(
-        "It's a small migratory bird, a delicacy in French cuisine. They're caught with nets, locked in a cage so they gorge themselves on grain until they're fat, then they're drowned in cognac to marinate the meat, and cooked and eaten whole. The traditional way of eating them is while covering your head with a towel so God doesn't see the indulgent and depraved thing you're doing, so that says something.",
-        is_reply=True)
+    fake_comment2 = SampleObject(
+        "This is another users comment. Obviously this is not really a top comment on a Reddit post, but it is something with words an such and will serve for testing purposes.",
+        is_reply=False)
     fake_submission = SampleObject("Meat eaters: what type of meat, if any, is off your menu for ethical reasons?",
                                    is_submission=True)
 
     drawPost(fake_comment)
-    drawPost(fake_reply)
+    drawPost(fake_comment2)
     drawPost(fake_submission)
