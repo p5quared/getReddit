@@ -18,6 +18,8 @@ if __name__ == '__main__':
     final = sub_final.set_audio(joined_audio)
 
     final.write_videofile("./test_resources/output.mp4")
+    # Audio does not work in quicktime... but it is there. Play in VLC to hear
+
 
 '''
 width of frame =      1080px

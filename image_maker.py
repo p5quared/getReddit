@@ -3,7 +3,7 @@ import textwrap
 
 
 # TODO: Output to DIR
-def drawPost(post_object):
+def drawPost(post_object, dir, i):
     body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
     body_string = "\n".join(body_wrapped)
 
@@ -17,22 +17,22 @@ def drawPost(post_object):
     out = Image.new('RGB', (950, height), color=(0, 0, 0))
     d = ImageDraw.Draw(out)
 
-    poster = "u/" + post_object.username + ":"
+    poster = "u/" + post_object.authorName + ":"
     if post_object.isSubmission:
         poster = "Posted by: " + poster
     body_x = 25
-    if post_object.isReply:
-        # draw reply line
+    if post_object.isReply:  # pushes body over and adds reply line
         d.line((10, 120, 10, out.size[1] * .9), fill=(200, 200, 200), width=4)
         body_x = + 25
-        poster = "Reply by: " + poster
+        poster = "Reply by: " + poster.authorName
 
     font = ImageFont.truetype("Helvetica.ttc", 48)
     d.text((25, 50), poster, font=font, fill=(256, 256, 256))  # draw username
     d.multiline_text((body_x, 120), body_string, font=font, fill=(256, 256, 256))  # draw comment
 
+    out.save("./test_resources/" + dir + "/" + str(i) + ".jpeg")
     if __name__ == '__main__':
-        out.save("./test_resources/" + post_object.username + ".jpeg")
+        out.save("./test_resources/" + post_object.authorName + ".jpeg")
 
 
 #  Optimizing for mobile/tiktok size (1080x1920)
@@ -47,6 +47,7 @@ if __name__ == '__main__':
             self.isSubmission = is_submission
             self.isReply = is_reply
             self.score = 2_200
+            self.id = 'steadfastness'
 
 
     fake_comment = SampleObject(
