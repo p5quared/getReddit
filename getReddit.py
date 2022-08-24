@@ -1,18 +1,11 @@
 import praw
-import os
-from dotenv import load_dotenv
+from os import environ
 
 from classes import RedditObject, Post
 
-load_dotenv()
-USER_ID = os.getenv('USER_ID')
-USER_PASSWORD = os.getenv('USER_PASSWORD')
-CLIENT_ID = os.getenv('CLIENT_ID')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-
 reddit = praw.Reddit(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
+    client_id=environ['CLIENT_ID'],
+    client_secret=environ['CLIENT_SECRET'],
     user_agent=f'python: PMAW request enrichment (by u/pto2)'
 )
 print(f'Reddit instance established?.....\n{reddit.read_only}\n')
@@ -39,7 +32,7 @@ def getReddit(sub, num_posts):
             nPost.comments.append(RedditObject(
                 surface_comment.score,
                 surface_comment.id,
-                surface_comment.author.name,
+                safe_author_name,
                 surface_comment.subreddit.name,
                 body=surface_comment.body
             ))
