@@ -3,7 +3,7 @@ import textwrap
 
 
 # TODO: Output to DIR
-def drawPost(post_object, dir, i):
+def drawPost(post_object, t_dir, i):
     body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
     body_string = "\n".join(body_wrapped)
 
@@ -30,7 +30,7 @@ def drawPost(post_object, dir, i):
     d.text((25, 50), poster, font=font, fill=(256, 256, 256))  # draw username
     d.multiline_text((body_x, 120), body_string, font=font, fill=(256, 256, 256))  # draw comment
 
-    out.save("./test_resources/" + dir + "/" + str(i) + ".jpeg")
+    out.save("./test_resources/" + t_dir + "/images/" + str(i) + ".jpeg")
     if __name__ == '__main__':
         out.save("./test_resources/" + post_object.authorName + ".jpeg")
 
