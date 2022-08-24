@@ -1,6 +1,37 @@
 from moviepy.editor import *
+import os
+
+
+def makeMovie(post_object):
+    base_directory = f'./test_resources/{post_object.id}'
+    audio_directory = base_directory + "/audio/"
+    image_directory = base_directory + "/images/"
+
+    # audio
+    audio_files = os.scandir(audio_directory)
+    audio_clips = [AudioFileClip(file) for file in audio_files]
+    joined_audio = concatenate_audioclips(audio_clips)
+
+    # clips
+    image_files = os.scandir(image_directory)
+    image_clips = [ImageClip(file) for file in image_files]
+    image_clips = [clip.set_duration(narration.duration) for clip, narration in zip(image_clips, audio_clips)]
+    joined_clips = concatenate(image_clips, method="compose")
+
+    # background
+    bg = VideoFileClip("./test_resources/ocean_waves_bg.mp4").rotate(90)
+    bg_looped = bg.loop(duration=joined_audio.duration)
+
+    # combine
+    sub_final = CompositeVideoClip([bg_looped, joined_clips.set_position((65, 600))])
+    final = sub_final.set_audio(joined_audio)
+
+    # Audio does not work in quicktime... but it is there. Play in VLC to hear
+    final.write_videofile(base_directory + "out.mp3")
+
 
 if __name__ == '__main__':
+    '''
     title = AudioFileClip("./test_resources/title_audio.mp3")
     com1 = AudioFileClip("./test_resources/comment1.mp3")
     com2 = AudioFileClip("./test_resources/comment2.mp3")
@@ -18,8 +49,7 @@ if __name__ == '__main__':
     final = sub_final.set_audio(joined_audio)
 
     final.write_videofile("./test_resources/output.mp4")
-    # Audio does not work in quicktime... but it is there. Play in VLC to hear
-
+    '''
 
 '''
 width of frame =      1080px
