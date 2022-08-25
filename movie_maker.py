@@ -3,20 +3,27 @@ import os
 
 
 def makeMovie(post_object):
-    base_directory = f'./test_resources/{post_object.id}'
-    audio_directory = base_directory + "/audio/"
-    image_directory = base_directory + "/images/"
+    # While it might make sense to just past a directory or id instead of the whole object,
+    # I feel this is more versatile for future implementations
+    base_directory = f'./test_resources/{post_object.id}/'
+    audio_directory = base_directory + "audio/"
+    image_directory = base_directory + "images/"
 
     # audio
-    audio_files = os.scandir(audio_directory)
-    audio_clips = [AudioFileClip(file) for file in audio_files]
+    audio_clips = []
+    for filename in sorted(os.listdir(audio_directory)):
+        print(f'Getting audio from {audio_directory + filename}...')
+        audio_clips.append((AudioFileClip(audio_directory + filename)))
+
     joined_audio = concatenate_audioclips(audio_clips)
 
     # clips
-    image_files = os.scandir(image_directory)
-    image_clips = [ImageClip(file) for file in image_files]
-    image_clips = [clip.set_duration(narration.duration) for clip, narration in zip(image_clips, audio_clips)]
-    joined_clips = concatenate(image_clips, method="compose")
+    image_clips = []
+    for filename in sorted(os.listdir(image_directory)):
+        print(f'Getting image from {image_directory + filename}...')
+        image_clips.append(ImageClip(image_directory + filename))
+    timed_image_clips = [clip.set_duration(narration.duration) for clip, narration in zip(image_clips, audio_clips)]
+    joined_clips = concatenate(timed_image_clips, method="compose")
 
     # background
     bg = VideoFileClip("./test_resources/ocean_waves_bg.mp4").rotate(90)
@@ -31,44 +38,10 @@ def makeMovie(post_object):
 
 
 if __name__ == '__main__':
-    '''
-    title = AudioFileClip("./test_resources/title_audio.mp3")
-    com1 = AudioFileClip("./test_resources/comment1.mp3")
-    com2 = AudioFileClip("./test_resources/comment2.mp3")
-
-    joined_audio = concatenate_audioclips([title, com1, com2])
-
-    bg = VideoFileClip("./test_resources/ocean_waves_bg.mp4").rotate(90)
-    bg_looped = bg.loop(duration=joined_audio.duration)
-    title_im = ImageClip("./test_resources/title_im.jpeg").set_duration(title.duration)
-    com1_im = ImageClip("./test_resources/com1.jpeg").set_duration(com1.duration)
-    com2_im = ImageClip("./test_resources/com2.jpeg").set_duration(com2.duration)
-
-    reddit_clips = concatenate([title_im, com1_im, com2_im], method="compose")
-    sub_final = CompositeVideoClip([bg_looped, reddit_clips.set_position((65, 600))])
-    final = sub_final.set_audio(joined_audio)
-
-    final.write_videofile("./test_resources/output.mp4")
-    '''
-
-'''
-width of frame =      1080px
-width of text images = 950px
-adjusted x =           130px
-1920
-960
-
-get length of audio clips
-[Title = 5s], [C1 = 9s], [C2 = 11s]
->concatenate
-
-run background clip for duration of audio
-
-show images at correct timestamps...
-[Ti = 0>>5s], [C1i = 5s >> 9s], [C2i = 9s >> 20s]
-
-join it all
+    class TestObject:
+        def __init__(self, test_id):
+            self.id = test_id
 
 
-NOTE>> Use compositeVideoClip to just slap replies on top of comments
-'''
+    t = TestObject("wxbekm")
+    makeMovie(t)
