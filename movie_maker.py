@@ -34,7 +34,7 @@ def makeMovie(post_object):
     final = sub_final.set_audio(joined_audio)
 
     # Audio does not work in quicktime... but it is there. Play in VLC to hear
-    final.write_videofile(base_directory + "out.mp3")
+    final.write_videofile(base_directory + "out.mp4")
 
 
 if __name__ == '__main__':
