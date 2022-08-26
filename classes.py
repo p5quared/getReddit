@@ -13,6 +13,7 @@ class RedditObject:
 
 
 class Post:
+    # TODO: implement logic modules as methods on Post
     head: RedditObject
     comments: [RedditObject]
     isMovie: bool = False

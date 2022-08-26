@@ -1,9 +1,11 @@
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
+username_color = (0, 0, 0)
+bg_color = (245, 245, 245)
 
-# TODO: Output to DIR
-def drawPost(post_object, t_dir, i):
+
+def drawPost(post_object, i, t_dir='test_dir'):
     body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
     body_string = "\n".join(body_wrapped)
 
@@ -14,7 +16,7 @@ def drawPost(post_object, t_dir, i):
         height = (len(body_wrapped) + 3) * 48  # roughly height of wrapped-text plus 2 lines
 
     # Pillow Stuff
-    out = Image.new('RGB', (950, height), color=(0, 0, 0))
+    out = Image.new('RGB', (950, height), color=bg_color)
     d = ImageDraw.Draw(out)
 
     poster = "u/" + post_object.authorName + ":"
@@ -22,13 +24,13 @@ def drawPost(post_object, t_dir, i):
         poster = "Posted by: " + poster
     body_x = 25
     if post_object.isReply:  # pushes body over and adds reply line
-        d.line((10, 120, 10, out.size[1] * .9), fill=(200, 200, 200), width=4)
+        d.line((10, 120, 10, out.size[1] * .9), fill=(85, 89, 92), width=4)
         body_x = + 25
         poster = "Reply by: " + poster.authorName
 
     font = ImageFont.truetype("Helvetica.ttc", 48)
-    d.text((25, 50), poster, font=font, fill=(256, 256, 256))  # draw username
-    d.multiline_text((body_x, 120), body_string, font=font, fill=(256, 256, 256))  # draw comment
+    d.text((25, 50), poster, font=font, fill=username_color)  # draw username
+    d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
 
     out.save("./test_resources/" + t_dir + "/images/" + str(i) + ".jpeg")
     if __name__ == '__main__':
@@ -37,13 +39,10 @@ def drawPost(post_object, t_dir, i):
 
 #  Optimizing for mobile/tiktok size (1080x1920)
 if __name__ == '__main__':
-    from random import randint
-
-
     class SampleObject:
         def __init__(self, body: str, is_submission=False, is_reply=False):
             self.body = body
-            self.username = "someUser" + str(randint(0, 10000))
+            self.authorName = "someUser" + str(randint(0, 10000))
             self.isSubmission = is_submission
             self.isReply = is_reply
             self.score = 2_200
@@ -58,6 +57,6 @@ if __name__ == '__main__':
     fake_submission = SampleObject("Meat eaters: what type of meat, if any, is off your menu for ethical reasons?",
                                    is_submission=True)
 
-    drawPost(fake_comment)
-    drawPost(fake_comment2)
-    drawPost(fake_submission)
+    drawPost(fake_comment, 0)
+    #    drawPost(fake_comment2)
+    drawPost(fake_submission, 1)
