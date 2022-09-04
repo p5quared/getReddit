@@ -5,7 +5,7 @@ username_color = (0, 0, 0)
 bg_color = (245, 245, 245)
 
 
-def drawPost(post_object, i, t_dir='test_dir'):
+def drawPost(post_object, _id: str, i: int):
     body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
     body_string = "\n".join(body_wrapped)
 
@@ -31,8 +31,7 @@ def drawPost(post_object, i, t_dir='test_dir'):
     font = ImageFont.truetype("Helvetica.ttc", 48)
     d.text((25, 50), poster, font=font, fill=username_color)  # draw username
     d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
-
-    out.save("./test_resources/" + t_dir + "/images/" + str(i) + ".jpeg")
+    out.save("./test_resources/" + _id + "/images/" + str(i) + ".jpeg")
     if __name__ == '__main__':
         out.save("./test_resources/" + post_object.authorName + ".jpeg")
 
@@ -42,7 +41,7 @@ if __name__ == '__main__':
     class SampleObject:
         def __init__(self, body: str, is_submission=False, is_reply=False):
             self.body = body
-            self.authorName = "someUser" + str(randint(0, 10000))
+            self.authorName = "someUser" + '12351235'
             self.isSubmission = is_submission
             self.isReply = is_reply
             self.score = 2_200
