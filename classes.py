@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from gtts import gTTS
 
 
 @dataclass(frozen=True, order=True)

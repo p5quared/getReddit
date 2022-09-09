@@ -16,9 +16,9 @@ def formatBackgroundVideo(target_duration):
 def makeMovie(post_object):
     # While it might make sense to just past a directory or id instead of the whole object,
     # I feel this will be more versatile for future implementations
-    base_directory = f'./test_resources/{post_object.id}/'
-    audio_directory = base_directory + "audio/"
-    image_directory = base_directory + "images/"
+    base_directory = f'./working/{post_object.id}/'
+    audio_directory = base_directory + "sound/"
+    image_directory = base_directory + "image/"
 
     # audio
     audio_clips = []

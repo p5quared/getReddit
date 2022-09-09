@@ -8,7 +8,6 @@ reddit = praw.Reddit(
     client_secret=environ['CLIENT_SECRET'],
     user_agent=f'python: PMAW request enrichment (by u/pto2)'
 )
-print(f'Reddit instance established?.....\n{reddit.read_only}\n')
 
 
 def getReddit(sub, num_posts):
@@ -16,7 +15,7 @@ def getReddit(sub, num_posts):
     reddit_submissions = reddit.subreddit(sub).hot(limit=num_posts)
     for n, submission in enumerate(reddit_submissions):
         submission.comments.replace_more(limit=0)
-        nPost = Post(RedditObject(
+        new_post = Post(RedditObject(
             submission.score,
             submission.id,
             submission.author.name,
@@ -24,12 +23,12 @@ def getReddit(sub, num_posts):
             body=submission.title,
             isSubmission=True
         ))
-        for surface_comment in submission.comments[:10]:
+        for surface_comment in submission.comments[:3]:  # number of comments to retrieve
             if surface_comment.author is None:
                 safe_author_name = "deleted"
             else:
                 safe_author_name = surface_comment.author.name
-            nPost.comments.append(RedditObject(
+            new_post.comments.append(RedditObject(
                 surface_comment.score,
                 surface_comment.id,
                 safe_author_name,
@@ -37,5 +36,9 @@ def getReddit(sub, num_posts):
                 body=surface_comment.body
             ))
         print(f"{n + 1} POST(s) GATHERED")
-        gathered_posts.append(nPost)
+        gathered_posts.append(new_post)
     return gathered_posts
+
+
+if __name__ == '__main__':
+    print(f'Reddit instance established?.....\n{reddit.read_only}\n')

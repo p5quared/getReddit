@@ -31,7 +31,7 @@ def drawPost(post_object, _id: str, i: int):
     font = ImageFont.truetype("Helvetica.ttc", 48)
     d.text((25, 50), poster, font=font, fill=username_color)  # draw username
     d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
-    out.save("./test_resources/" + _id + "/images/" + str(i) + ".jpeg")
+    out.save("./working/" + _id + "/image/" + str(i) + ".jpeg")
     if __name__ == '__main__':
         out.save("./test_resources/" + post_object.authorName + ".jpeg")
 
