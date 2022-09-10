@@ -6,7 +6,7 @@ from classes import RedditObject, Post
 reddit = praw.Reddit(
     client_id=environ['CLIENT_ID'],
     client_secret=environ['CLIENT_SECRET'],
-    user_agent=f'python: PMAW request enrichment (by u/pto2)'
+    user_agent=f'requests for my Youtube maker script (u/pto2)'
 )
 
 
@@ -23,7 +23,7 @@ def getReddit(sub, num_posts):
             body=submission.title,
             isSubmission=True
         ))
-        for surface_comment in submission.comments[:3]:  # number of comments to retrieve
+        for surface_comment in submission.comments[:1]:  # number of comments to retrieve
             if surface_comment.author is None:
                 safe_author_name = "deleted"
             else:

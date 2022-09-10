@@ -8,14 +8,12 @@ def formatBackgroundVideo(target_duration):
         .resize(height=1920) \
         .crop(x1=1166.6, y1=0, x2=2246.6, y2=1920)
 
-    random_in_point = randint(0, int(bg.duration) - (int(target_duration) + 3))
+    random_in_point = randint(0, int(bg.duration) - (int(target_duration) + 1))
     bg_trimmed = bg.subclip(random_in_point, random_in_point + int(target_duration))
     return bg_trimmed
 
 
 def makeMovie(post_object):
-    # While it might make sense to just past a directory or id instead of the whole object,
-    # I feel this will be more versatile for future implementations
     base_directory = f'./working/{post_object.id}/'
     audio_directory = base_directory + "sound/"
     image_directory = base_directory + "image/"
