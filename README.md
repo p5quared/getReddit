@@ -1,7 +1,7 @@
 # getReddit
 A script that turns any text based (for now) post from Reddit into a youtube shorts clip with narration and background video.
 
-##How to use:
+## How to use:
 1. Clone repository 
 git clone https://github.com/p5quared/getReddit
 2. In 'getReddit.py', edit the pRAW elements to reflect your own client_id and client_secret tokens.
