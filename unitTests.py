@@ -13,6 +13,5 @@ class TestSum(unittest.TestCase):
         self.assertEqual(new_reddit.read_only, True)
 
 
-
 if __name__ == '__main__':
     unittest.main()
