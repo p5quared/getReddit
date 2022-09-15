@@ -1,9 +1,12 @@
-from dataclasses import dataclass
-from gtts import gTTS
 import os
-from shutil import rmtree
-from PIL import Image, ImageDraw, ImageFont
 import textwrap
+from dataclasses import dataclass
+from shutil import rmtree
+
+from PIL import Image, ImageDraw, ImageFont
+from gtts import gTTS
+
+from movie_maker import makeMovie
 
 username_color = (0, 0, 0)
 bg_color = (245, 245, 245)
@@ -28,24 +31,37 @@ class Post:
     def __init__(self, head):
         self.head = head
         self.id = head.id
+        self.base_working = os.path.join("./working", self.id)
+        self.image_dir = os.path.join(self.base_working, 'image/')
+        self.sound_dir = os.path.join(self.base_working, 'sound/')
         self.comments = list()
+
+    def write_movie(self):
+        self.dirs_make()
+        print("Generating images...")
+        self.drawPost()
+        print("Images created!")
+        print("Generating audio...")
+        self.script_to_speech()
+        print("Audio created!")
+        print("Generating movie...")
+        makeMovie(self)
+        print("Success!! \n Cleaning up...")
+        self.dirs_cleanUp()
 
     def script_to_speech(self):
         text_to_convert = [self.head.body] + [comment.body for comment in self.comments]
         for i, text in enumerate(text_to_convert):
             audio_obj = gTTS(text=text, lang="en", slow=False)
-            audio_obj.save("./working/" + self.id + "/sound/" + str(i) + ".mp3")
+            audio_obj.save(self.sound_dir + str(i) + ".mp3")
             #  ie [./test_resources/u1512/audio/{n}.mp3]
 
     def dirs_make(self):
-        working_directory = os.path.join("./working", self.id)
-        image = os.path.join(working_directory, 'image')
-        sound = os.path.join(working_directory, 'sound')
-        if os.path.exists(working_directory):
-            rmtree(working_directory)
-        os.mkdir(working_directory)
-        os.mkdir(image)
-        os.mkdir(sound)
+        if os.path.exists(self.base_working):
+            rmtree(self.base_working)
+        os.mkdir(self.base_working)
+        os.mkdir(self.image_dir)
+        os.mkdir(self.sound_dir)
 
     def dirs_cleanUp(self):
         working_directory = os.path.join("./working", self.id)
@@ -81,4 +97,4 @@ class Post:
             font = ImageFont.truetype("Helvetica.ttc", 48)
             d.text((25, 50), poster, font=font, fill=username_color)  # draw username
             d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
-            out.save("./working/" + self.id + "/image/" + str(i) + ".jpeg")
+            out.save(self.image_dir + str(i) + ".jpeg")
