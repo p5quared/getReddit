@@ -1,6 +1,7 @@
-from moviepy.editor import *
 from random import randint
-import os
+
+from moviepy.editor import *
+from moviepy.video.VideoClip import ImageClip
 
 
 def formatBackgroundVideo(target_duration):
@@ -13,36 +14,63 @@ def formatBackgroundVideo(target_duration):
     return bg_trimmed
 
 
-def makeMovie(post_object):
-    base_directory = f'./working/{post_object.id}/'
-    audio_directory = base_directory + "sound/"
-    image_directory = base_directory + "image/"
+def manageSize(post_object, audio_clips, img_clips, desired_length):
+    # if the movie length is too long, separate movie into multiple
+    # must have gotten > desired length in clips
+    temp_audio = list()
+    temp_clips = list()
+    desired_movies = list(dict())  # [{name:'id_x', audio:'y' clips:'z', bg:'bg'},{}...]
+    for i, (audio_clip, img_clip) in enumerate(zip(audio_clips[1:], img_clips[1:])):  # first clip is title
+        if len(temp_audio) == 0 or audio_clips[0].duration + sum(
+                [clip.duration for clip in temp_audio]) < desired_length:
+            temp_audio.append(audio_clip)
+            temp_clips.append(img_clip)
+        else:
+            movie = dict()
+            movie['name'] = post_object.id + '_' + str(i)
+            movie['audio'] = concatenate_audioclips([audio_clips[0]] + temp_audio)
+            movie['clips'] = concatenate_videoclips([img_clips[0]] + temp_clips)
+            movie['bg'] = formatBackgroundVideo(movie['audio'].duration)
+            desired_movies.append(movie)
+            temp_audio = list()
+            temp_clips = list()
+    # if len(desired_movies) == 0:
+    #     movie = dict()
+    #     movie['name'] = post_object.id
+    #     movie['audio'] = concatenate_audioclips([audio_clips[0]] + temp_audio)
+    #     movie['clips'] = concatenate_videoclips([img_clips[0]] + temp_clips)
+    #     movie['bg'] = formatBackgroundVideo(movie['audio'].duration)
 
-    # audio
-    audio_clips = []
-    for filename in sorted(os.listdir(audio_directory)):
-        print(f'Getting audio from {audio_directory + filename}...')
-        audio_clips.append((AudioFileClip(audio_directory + filename)))
+    return desired_movies
 
-    joined_audio = concatenate_audioclips(audio_clips)
 
-    # image clips
-    image_clips = []
-    for filename in sorted(os.listdir(image_directory)):
-        print(f'Getting image from {image_directory + filename}...')
-        image_clips.append(ImageClip(image_directory + filename))
+def compileMovie(movie):
+    # from list of given clips, compile movie
+    movie_out = CompositeVideoClip([movie['bg'], movie['clips'].set_position((65, 600))]).set_audio(movie['audio'])
+    movie_out.write_videofile("./output/" + movie['name'] + ".mp4")
+
+
+def makeMovie(post_object, desired_length: int):
+    audio_clips: list[AudioFileClip] = []
+    for filename in sorted(os.listdir(post_object.sound_dir)):
+        audio_clips.append((AudioFileClip(post_object.sound_dir + filename)))
+
+    image_clips: list[ImageClip] = []
+    for filename in sorted(os.listdir(post_object.image_dir)):
+        image_clips.append(ImageClip(post_object.image_dir + filename))
     timed_image_clips = [clip.set_duration(narration.duration) for clip, narration in zip(image_clips, audio_clips)]
-    joined_clips = concatenate(timed_image_clips, method="compose")
 
-    # background
-    background_movie = formatBackgroundVideo(joined_clips.duration)
+    desired_movies = manageSize(post_object, audio_clips, timed_image_clips,
+                                desired_length)  # {output_name: [ints corresponding to clips to use]}
 
-    # combine
-    sub_final = CompositeVideoClip([background_movie, joined_clips.set_position((65, 600))])
-    final = sub_final.set_audio(joined_audio)
-
-    # Audio does not work in quicktime... but it is there. Play in VLC to hear
-    final.write_videofile("./output/" + post_object.id + "_out.mp4")
+    for movie in desired_movies:
+        compileMovie(movie)
+    # # combine
+    # sub_final = CompositeVideoClip([background_movie, joined_images.set_position((65, 600))])
+    # final = sub_final.set_audio(joined_audio)
+    #
+    # # Audio does not work in quicktime... but it is there. Play in VLC to hear
+    # final.write_videofile("./output/" + post_object.id + "_out.mp4")
 
 
 if __name__ == '__main__':
