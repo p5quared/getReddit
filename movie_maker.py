@@ -34,13 +34,6 @@ def manageSize(post_object, audio_clips, img_clips, desired_length):
             desired_movies.append(movie)
             temp_audio = list()
             temp_clips = list()
-    # if len(desired_movies) == 0:
-    #     movie = dict()
-    #     movie['name'] = post_object.id
-    #     movie['audio'] = concatenate_audioclips([audio_clips[0]] + temp_audio)
-    #     movie['clips'] = concatenate_videoclips([img_clips[0]] + temp_clips)
-    #     movie['bg'] = formatBackgroundVideo(movie['audio'].duration)
-
     return desired_movies
 
 
@@ -65,12 +58,6 @@ def makeMovie(post_object, desired_length: int):
 
     for movie in desired_movies:
         compileMovie(movie)
-    # # combine
-    # sub_final = CompositeVideoClip([background_movie, joined_images.set_position((65, 600))])
-    # final = sub_final.set_audio(joined_audio)
-    #
-    # # Audio does not work in quicktime... but it is there. Play in VLC to hear
-    # final.write_videofile("./output/" + post_object.id + "_out.mp4")
 
 
 if __name__ == '__main__':
