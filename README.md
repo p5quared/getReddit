@@ -1,12 +1,11 @@
 # getReddit
-There are three parts to this project:
+A script that turns any text based (for now) post from Reddit into a youtube shorts clip with narration and background video.
 
-1. Gather Content
-  I. Get popular comment (threads) and submissions from Reddit via PRAW
-  II. Store data in objects locally and on a DB
-2. Create Media
-  I. Convert text from comments and submissions into speech mp3's
-  II. Dynamically create images from submissions and comments via Pillow module
-  III. Combine audio and images with music and generic background clips to form youtube shorts/tikToks
-3. Share Media
-  I. Upload media to accounts on TikTok and Youtube, (likely via Selenium)
+## How to use:
+1. Clone repository 
+git clone https://github.com/p5quared/getReddit
+2. In 'getReddit.py', edit the pRAW elements to reflect your own client_id and client_secret tokens.
+3. Download an appropriate background video. The one I used is located [here]. Place it in the root directory and rename it to background.mp4.
+4. Run from your favorite IDE or terminal (python main.py)
+
+Resulting video(s) will be saved to the folder called 'output' with the format '{reddit_post.id}.mp3'
