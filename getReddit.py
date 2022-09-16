@@ -10,7 +10,7 @@ reddit = praw.Reddit(
 )
 
 
-def getReddit(sub, num_posts):
+def getReddit(sub, num_posts, comments_per_post):
     gathered_posts = list()
     reddit_submissions = reddit.subreddit(sub).hot(limit=num_posts)
     for n, submission in enumerate(reddit_submissions):
@@ -23,7 +23,7 @@ def getReddit(sub, num_posts):
             body=submission.title,
             isSubmission=True
         ))
-        for surface_comment in submission.comments[:1]:  # number of comments to retrieve
+        for surface_comment in submission.comments[:comments_per_post]:  # number of comments to retrieve
             if surface_comment.author is None:
                 safe_author_name = "deleted"
             else:
