@@ -45,7 +45,7 @@ class Post:
         self.script_to_speech()
         print("Audio created!")
         print("Generating movie...")
-        makeMovie(self)
+        makeMovie(self, 15)
         print("Success!! \n Cleaning up...")
         self.dirs_cleanUp()
 
