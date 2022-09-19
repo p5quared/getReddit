@@ -1,3 +1,5 @@
+import json
+
 import praw
 from os import environ
 
@@ -38,6 +40,8 @@ def getReddit(sub, num_posts, comments_per_post):
         print(f"{n + 1} POST(s) GATHERED")
         gathered_posts.append(new_post)
     return gathered_posts
+
+
 
 
 if __name__ == '__main__':

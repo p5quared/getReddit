@@ -1,3 +1,4 @@
+import json
 import os
 import textwrap
 from dataclasses import dataclass
@@ -98,3 +99,11 @@ class Post:
             d.text((25, 50), poster, font=font, fill=username_color)  # draw username
             d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
             out.save(self.image_dir + str(i) + ".jpeg")
+
+    def writeTestObject(self, i):  # writes post obj to JSON file for quicker testing purposes
+        post_object = dict()
+        post_object['head'] = self.head.__dict__
+        post_object['comments'] = [comment.__dict__ for comment in self.comments]
+
+        with open(f'./test_resources/sample_objects/object_{i}.txt', 'w') as outfile:
+            outfile.write(json.dumps(post_object))

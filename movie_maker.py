@@ -10,7 +10,7 @@ def formatBackgroundVideo(target_duration):
         .crop(x1=1166.6, y1=0, x2=2246.6, y2=1920)
 
     random_in_point = randint(0, int(bg.duration) - (int(target_duration) + 1))
-    bg_trimmed = bg.subclip(random_in_point, random_in_point + int(target_duration))
+    bg_trimmed = bg.subclip(random_in_point, random_in_point + target_duration)
     return bg_trimmed
 
 
@@ -34,6 +34,7 @@ def manageSize(post_object, audio_clips, img_clips, desired_length):
             desired_movies.append(movie)
             temp_audio = list()
             temp_clips = list()
+    print(f'Generated {len(desired_movies)} unique movies!')
     return desired_movies
 
 
