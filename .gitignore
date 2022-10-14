@@ -1,3 +1,6 @@
 .env
 subtext.txt
 test_resources
+output
+background_clips
+credentials/yt_client_secret.json
