@@ -26,7 +26,7 @@ if __name__ == '__main__':
                 post.write_movie()
         elif use_case == 3:
             for i, post in enumerate(content):
-                post.writeTestObject(i)
+                post.write_test_object(i)
             print("Objects written!")
         else:
             print("Input not understood.")
