@@ -7,7 +7,7 @@ from shutil import rmtree
 from PIL import Image, ImageDraw, ImageFont
 from gtts import gTTS
 
-from movie_maker import makeMovie
+from movie_maker import make_movie
 
 username_color = (0, 0, 0)
 bg_color = (245, 245, 245)
@@ -40,15 +40,15 @@ class Post:
     def write_movie(self):
         self.dirs_make()
         print("Generating images...")
-        self.drawPost()
+        self.draw_post()
         print("Images created!")
         print("Generating audio...")
         self.script_to_speech()
         print("Audio created!")
         print("Generating movie...")
-        makeMovie(self, 15)
+        make_movie(self, 15)
         print("Success!! \n Cleaning up...")
-        self.dirs_cleanUp()
+        self.dirs_clean()
 
     def script_to_speech(self):
         text_to_convert = [self.head.body] + [comment.body for comment in self.comments]
@@ -64,14 +64,14 @@ class Post:
         os.mkdir(self.image_dir)
         os.mkdir(self.sound_dir)
 
-    def dirs_cleanUp(self):
+    def dirs_clean(self):
         working_directory = os.path.join("./working", self.id)
         if os.path.exists(working_directory):
             rmtree(working_directory)
         else:
             print(f"ERROR: attempted to delete <{working_directory}> which does not exist.")
 
-    def drawPost(self):
+    def draw_post(self):
         for i, post_object in enumerate([self.head] + self.comments):
             body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
             body_string = "\n".join(body_wrapped)
@@ -100,7 +100,7 @@ class Post:
             d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
             out.save(self.image_dir + str(i) + ".jpeg")
 
-    def writeTestObject(self, i):  # writes post obj to JSON file for quicker testing purposes
+    def write_test_object(self, i):  # writes post obj to JSON file for quicker testing purposes
         post_object = dict()
         post_object['head'] = self.head.__dict__
         post_object['comments'] = [comment.__dict__ for comment in self.comments]
