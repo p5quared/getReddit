@@ -71,6 +71,18 @@ class Post:
         else:
             print(f"ERROR: attempted to delete <{working_directory}> which does not exist.")
 
+    def draw_thumbnail(self):
+        title_wrapped = textwrap.wrap(self.head.body, 50)
+        title_string = "\n".join(title_wrapped)
+        height, width = 1920, 1080
+
+        out = Image.new('RGB', (950, height), color=(0, 0, 0))
+        d = ImageDraw.Draw(out)
+
+        font = ImageFont.truetype("Helvetica.ttc", 48)
+        d.multiline_text((25, 50), title_string, font=font, fill=(256, 256, 256))
+        out.save("./test_resources/test_thumb.jpeg")
+
     def draw_post(self):
         for i, post_object in enumerate([self.head] + self.comments):
             body_wrapped = textwrap.wrap(post_object.body, 40)  # 2nd arg is a width limiter
@@ -95,9 +107,9 @@ class Post:
             #     body_x = + 25
             #     poster = "Reply by: " + poster.authorName
 
-            font = ImageFont.truetype("Helvetica.ttc", 48)
-            d.text((25, 50), poster, font=font, fill=username_color)  # draw username
-            d.multiline_text((body_x, 120), body_string, font=font, fill=(0, 0, 0))  # draw comment text
+            font = ImageFont.truetype(font="~/Library/Fonts/SF-Pro.ttf", size=48)
+            d.text((25, 15), poster, font=font, fill=username_color)  # draw username
+            d.multiline_text((body_x, 75), body_string, font=font, fill=(0, 0, 0))  # draw comment text
             out.save(self.image_dir + str(i) + ".jpeg")
 
     def write_test_object(self, i):  # writes post obj to JSON file for quicker testing purposes
