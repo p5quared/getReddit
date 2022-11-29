@@ -9,8 +9,8 @@ def format_background_video(target_duration):
     """
     Mutates a 1920x1080 movie to be 1080x1920, and trims it to a desired length.
 
-    :param target_duration:
-    :return:  moviepy.VideoFileClip
+    :param target_duration:int
+    :return : moviepy.video.VideoClip
     """
     bg = VideoFileClip("./background_clips/minecraft_bg1.mp4") \
         .resize(height=1920) \
@@ -23,7 +23,7 @@ def format_background_video(target_duration):
 
 def manage_size(post_object, audio_clips, img_clips, desired_length):
     """
-     When single movies are too long, splits movie up and returns list of movies.
+    When large amounts of text makes movies too long, this splits up the large movies in to smaller pieces.
 
     :param post_object:
     :param audio_clips:
@@ -74,7 +74,7 @@ def make_movie(post_object, desired_length: int):
     """
     audio_clips: list[AudioFileClip] = []
     for filename in sorted(os.listdir(post_object.sound_dir)):
-        audio_clips.append((AudioFileClip(post_object.sound_dir + filename)))
+        audio_clips.append((AudioFileClip(post_object.sound_dir + filename).fx(vfx.speedx, 1.3)))
 
     image_clips: list[ImageClip] = []
     for filename in sorted(os.listdir(post_object.image_dir)):
