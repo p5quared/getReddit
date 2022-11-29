@@ -1,20 +1,20 @@
-import json
+import os
+import dotenv
 
 import praw
-from os import environ
 
 from classes import RedditObject, Post
 
 reddit = praw.Reddit(
-    client_id=environ['CLIENT_ID'],
-    client_secret=environ['CLIENT_SECRET'],
+    client_id=os.environ['CLIENT_ID'],
+    client_secret=os.environ['CLIENT_SECRET'],
     user_agent=f'requests for my Youtube maker script (u/pto2)'
 )
 
 
-def getReddit(sub, num_posts, comments_per_post):
+def getReddit(sub, num_posts, comments_per_post)->list:
     gathered_posts = list()
-    reddit_submissions = reddit.subreddit(sub).hot(limit=num_posts)
+    reddit_submissions = reddit.subreddit(sub).top(limit=num_posts, time_filter="day")
     for n, submission in enumerate(reddit_submissions):
         submission.comments.replace_more(limit=0)
         new_post = Post(RedditObject(
