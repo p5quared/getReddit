@@ -6,7 +6,7 @@ from simple_youtube_api.LocalVideo import LocalVideo
 channel = Channel()
 channel.login("./credentials/yt_client_secret.json", "./credentials/credentials.storage")
 
-# setting up the video that is going to be uploaded
+# generate video upload object
 video = LocalVideo(file_path="./test_resources/test_vid1.mp4")
 
 # setting snippet
