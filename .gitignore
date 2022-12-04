@@ -1,6 +1,9 @@
-.env
-subtext.txt
 test_resources
 output
 background_clips
 credentials
+.idea
+
+subtext.txt
+
+.env
