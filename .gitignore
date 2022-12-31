@@ -1,8 +1,9 @@
 test_resources
 output
+working
 background_clips
 credentials
-.idea
+.idea/
 
 subtext.txt
 
